@@ -3,19 +3,19 @@ from misc import *
 import crypt
 
 def load_words(filename, regexp):
-    l = [ ]
-    f = open(filename, 'r')
-    for line in f:  
-      item = re.match(regexp, line)
-      if item != None:
-        l.append(line[item.start():item.end()])
-    return l
+  l = [ ]
+  f = open(filename, 'r')
+  for line in f:  
+    item = re.match(regexp, line)
+    if item != None:
+      l.append(line[item.start():item.end()])
+  return l
 
 def transform_reverse(s):
-    st = ''
-    for x in reversed(s):
-      st += x
-    return [s, st] 
+  st = ''
+  for x in reversed(s):
+    st += x
+  return [s, st] 
 
 def transform_capitalize(string):
   words = [] 
@@ -30,16 +30,35 @@ def capitalize_helper(string, previous, words):
   capitalize_helper(string[1:], previous + string[0:1].upper(), words)
   capitalize_helper(string[1:], previous + string[0:1].lower(), words)
 
-def tc(string):
-    string = string.lower()
-    if len(string) > 1:
-      res = tc(s[1:])
-      return (s[0:1].upper() + res[0], s[0:1].lower() + res[1])
-    else:
-      return (string.upper(), string.lower())
+def transform_digits(string):
+  words = [] 
+  digits_helper(string, "", words)
+  return words
 
-def transform_digits(str):
-    raise Failure("to be written")
+def digits_helper(string, previous, words):
+  if len(string) == 1: 
+    words.append(previous + swap_char(string))
+    return words
+  if(string[0:1] == "B"):
+    digits_helper(string[1:], previous + swap_char(string[0:1].lower()), words)
+  digits_helper(string[1:], previous + swap_char(string[0:1]), words)
+  digits_helper(string[1:], previous + string[0:1], words)
+
+def swap_char(c):
+  d = {
+    "o": 0,
+    "i": 1,
+    "l": 1,
+    "z": 2,
+    "e": 3,
+    "a": 4,
+    "s": 5,
+    "t": 7,
+    "b": 6,
+    "B": 8
+  }
+
+  return str(d.get(c)) if d.get(c) != None else c
 
 def check_pass(plain,enc):
     """Check to see if the plaintext plain encrypts to the encrypted
