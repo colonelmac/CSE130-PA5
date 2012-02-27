@@ -87,12 +87,8 @@ def replace_keys(d):
 def crack_pass_file(password_file, words_file, output_file):
   users = load_passwd(password_file)
   words = load_words(words_file, r"([A-Za-z0-9_]+)$")
-
   out   = open(output_file, 'w')
 
-#capital = [transform_capitalize(w) for w in words]
-
-  #print users
   for j, user in enumerate(users):
     for i, word in enumerate(words):
     
@@ -111,27 +107,43 @@ def crack_pass_file(password_file, words_file, output_file):
 
   if len(users) > 0: 
   
-  for word in words:
-    if len(users) > 0:
-      for cap in transform_capitalize(word):
-        for j, user in enumerate(users):
+    for j, user in enumerate(users):
+      for i, word in enumerate(words):
+        for cap in transform_capitalize(word):
 
-          if check_pass(cap, user["password"]):
-            out.write(user["account"] + ":" + cap + "\n")
-            out.flush()
-            del users[j]
-            break
+            if check_pass(cap, user["password"]):
+              out.write(user["account"] + ":" + cap + "\n")
+              out.flush()
+              del users[j]
+              break
 
-  for word in words:
-    if len(users) > 0:
-      for dig in transform_digits(word):
-        for j, user in enumerate(users):
+            tr = transform_reverse(cap)[1]
 
-          if check_pass(dig, user["password"]):
-            out.write(user["account"] + ":" + dig + "\n")
-            out.flush()
-            del users[j]
-            break
+            if check_pass(tr, user["password"]):
+              out.write(user["account"] + ":" + tr + "\n")
+              out.flush()
+              del users[j]
+              break
+
+  if len(users) > 0:
+
+    for j, user in enumerate(users):
+      for i, word in enumerate(words):
+        for dig in transform_digits(word):
+
+            if check_pass(dig, user["password"]):
+              out.write(user["account"] + ":" + dig + "\n")
+              out.flush()
+              del users[j]
+              break
+
+            tr = transform_reverse(dig)[1]
+
+            if check_pass(tr, user["password"]):
+              out.write(user["account"] + ":" + tr + "\n")
+              out.flush()
+              del users[j]
+              break
 
   out.close()
   return
