@@ -113,7 +113,10 @@ def crack_pass_file(password_file, words_file, output_file):
         break
 
   del reverse
-  
+
+  out.close()
+  return
+  """
   for word in words:
     if len(users) > 0:
       for cap in transform_capitalize(word):
@@ -134,4 +137,6 @@ def crack_pass_file(password_file, words_file, output_file):
             out.write(user["account"] + ":" + dig + "\n")
             out.flush()
             del users[j]
-            break        
+            break    
+
+            """    
