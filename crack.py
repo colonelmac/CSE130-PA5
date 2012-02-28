@@ -94,6 +94,7 @@ def crack_pass_file(password_file, words_file, output_file):
     
       if check_pass(word, user["password"]):
         out.write(user["account"] + ":" + word + "\n")
+        out.flush()
         del users[j]
         break
       
