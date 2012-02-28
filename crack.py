@@ -89,13 +89,15 @@ def crack_pass_file(password_file, words_file, output_file):
   words = load_words(words_file, r"([A-Za-z0-9_]+)$")
   out   = open(output_file, 'w')
 
+  found = [ ]
+
   for j, user in enumerate(users):
     for i, word in enumerate(words):
     
       if check_pass(word, user["password"]):
         out.write(user["account"] + ":" + word + "\n")
         out.flush()
-        del users[j]
+        found.append(user)
         break
       
       tr = transform_reverse(word)[1]
@@ -103,8 +105,13 @@ def crack_pass_file(password_file, words_file, output_file):
       if check_pass(tr, user["password"]):
         out.write(user["account"] + ":" + tr + "\n")
         out.flush()
-        del users[j]
+        found.append(user)
         break
+
+  for f in found:
+    users.remove(f)
+
+  print "There are " + str(len(users)) + " left."
 
   if len(users) > 0: 
   
